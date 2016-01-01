@@ -1,0 +1,35 @@
+spring:
+  profiles: default
+
+server: 
+    wikiuser: 
+        duanmu: duanmu@helijia.com
+
+---
+
+spring:
+  profiles: testserver
+
+server: 
+    wikiuser: 
+        duanmu: duanmu@helijia.com
+        tianlangxing: tianlangxing@helijia.com
+        dahai: dahai@helijia.com
+        dafan: dafan@helijia.com
+        daxiong: daxiong@helijia.com
+        huosen: huosen@helijia.com
+        nainiu: nainiu@helijia.com
+        zhongzhong: zhongzhong@helijia.com
+        dangdang: dangdang@helijia.com
+        hertz: hezi@helijia.com
+        gaici: gaici@helijia.com
+        hongbeike: hongbeike@helijia.com
+        xiaoniqiu: xiaoniqiu@helijia.com
+        lantian: lantian@helijia.com
+        qixi: qixi@helijia.com
+        chuntian: chuntian@helijia.com
+        zichuan: zichuan@helijia.com
+        zangao: zangao@helijia.com
+        haigui: haigui@helijia.com
+        wozi: wozi@helijia.com
+        baiju: baiju@helijia.com
