@@ -57,8 +57,10 @@ public class EmailDemoApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		logger.info(Arrays.toString(args));
 		logger.info(wikiUserConfig.getWikiuser().toString());
-		if(args.length==0)
+		if(args.length==0){
+			logger.warn("please specify which operation you want? plus1 or count?");
 			return;
+		}
 		if ("plus1".equals(args[0])) // 发送加一链接
 			sendPlus1HtmlMessage(wikiUserConfig);
 		else if ("count".equals(args[0])) { // 发送订餐人数统计链接
@@ -87,6 +89,7 @@ public class EmailDemoApplication implements CommandLineRunner {
 		sendMessage(new SendMessageAction(){
 			@Override
 			public void action(MimeMessage msg, MimeMessageHelper helper) throws MessagingException {
+				logger.info("send count mail to {}", countMsgTo);
 				helper.setTo(countMsgTo);
 				helper.setSubject("今日订餐人数统计");
 				String content = generateCountContent(body);
