@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -57,7 +56,7 @@ public class EmailDemoApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		logger.info(Arrays.toString(args));
 		logger.info(wikiUserConfig.getWikiuser().toString());
-		if(args.length==0){
+		if (args.length == 0) {
 			logger.warn("please specify which operation you want? plus1 or count?");
 			return;
 		}
@@ -70,9 +69,11 @@ public class EmailDemoApplication implements CommandLineRunner {
 			sendCountHtmlMessage(response.getBody());
 		}
 	}
-	public interface SendMessageAction{
+
+	public interface SendMessageAction {
 		void action(MimeMessage msg, MimeMessageHelper helper) throws MessagingException;
 	}
+
 	private void sendMessage(SendMessageAction action) {
 		try {
 			final MimeMessage msg = javaMailService.createMimeMessage();
@@ -85,35 +86,32 @@ public class EmailDemoApplication implements CommandLineRunner {
 			logger.error("发送邮件失败", e);
 		}
 	}
+
 	private void sendCountHtmlMessage(List<Reservation> body) {
-		sendMessage(new SendMessageAction(){
-			@Override
-			public void action(MimeMessage msg, MimeMessageHelper helper) throws MessagingException {
-				logger.info("send count mail to {}", countMsgTo);
-				helper.setTo(countMsgTo);
-				helper.setSubject("今日订餐人数统计");
-				String content = generateCountContent(body);
-				helper.setText(content, true);
-				javaMailService.send(msg);				
-			}
-		});
-		
+		SendMessageAction countAction = (msg, helper) -> {
+			logger.info("send count mail to {}", countMsgTo);
+			helper.setTo(countMsgTo);
+			helper.setSubject("今日订餐人数统计");
+			String content = generateCountContent(body);
+			helper.setText(content, true);
+			javaMailService.send(msg);
+		};
+		sendMessage(countAction);
+
 	}
 
 	private void sendPlus1HtmlMessage(WikiUserConfig config) {
-		sendMessage(new SendMessageAction(){
-			@Override
-			public void action(MimeMessage msg, MimeMessageHelper helper) throws MessagingException {
-				for (String name : config.getWikiuser().keySet()) {
-					logger.info("send plus1 mail to {}", name);
-					helper.setTo(config.getWikiuser().get(name));
-					helper.setSubject("订餐加一");
-					String content = generatePlus1Content(name);
-					helper.setText(content, true);
-					javaMailService.send(msg);
-				}		
+		SendMessageAction plus1Action = (msg, helper) -> {
+			for (String name : config.getWikiuser().keySet()) {
+				logger.info("send plus1 mail to {}", name);
+				helper.setTo(config.getWikiuser().get(name));
+				helper.setSubject("订餐加一");
+				String content = generatePlus1Content(name);
+				helper.setText(content, true);
+				javaMailService.send(msg);
 			}
-		});
+		};
+		sendMessage(plus1Action);
 	}
 
 	private String generatePlus1Content(String name) throws MessagingException {
