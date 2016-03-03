@@ -9,7 +9,7 @@
            </#list>
            <br>
            <br>
-           每天下午16:30 发送统计订餐人数邮件到dev_server@helijia.com
+           每天下午16:30 发送统计订餐人数邮件到dev_server@foobar.com
         </div>
     </body>
 </html>
